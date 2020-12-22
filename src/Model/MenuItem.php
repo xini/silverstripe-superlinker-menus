@@ -284,10 +284,13 @@ class MenuItem extends SuperLink
     {
         $link = null;
         if ($this->ParentID) {
+            $link = $this->Parent()->CMSEditLink();
+            $link = preg_replace('/\/item\/([\d]+)\/edit/', '/item/$1', $link);
             $link = Controller::join_links(
-                $this->Parent()->CMSEditLink(),
+                $link,
                 'ItemEditForm/field/Children/item',
-                $this->ID
+                $this->ID,
+                'edit'
             );
         }
         else if ($this->MenuSetID) {
@@ -296,7 +299,8 @@ class MenuItem extends SuperLink
             $link = Controller::join_links(
                 $link,
                 'ItemEditForm/field/Items/item',
-                $this->ID
+                $this->ID,
+                'edit'
             );
         }
         $this->extend('updateCMSEditLink', $link);
