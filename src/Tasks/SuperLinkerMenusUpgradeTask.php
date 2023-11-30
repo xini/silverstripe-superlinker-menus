@@ -2,9 +2,11 @@
 
 namespace Fromholdio\SuperLinkerMenus\Tasks;
 
+use Fromholdio\SuperLinkerMenus\Model\MenuItem;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\Versioned\Versioned;
 
 class SuperLinkerMenusUpgradeTask extends BuildTask
 {
@@ -225,10 +227,12 @@ EOT;
     {
         $this->log("clean up tables... ", false);
 
-        $query = "DROP TABLE IF EXISTS MenuItem_Live";
-        DB::query($query);
-        $query = "DROP TABLE IF EXISTS MenuItem_Versions";
-        DB::query($query);
+        if (!MenuItem::has_extension(Versioned::class)) {
+            $query = "DROP TABLE IF EXISTS MenuItem_Live";
+            DB::query($query);
+            $query = "DROP TABLE IF EXISTS MenuItem_Versions";
+            DB::query($query);
+        }
 
         $this->log("done.");
     }
